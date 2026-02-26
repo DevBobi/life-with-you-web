@@ -7,16 +7,30 @@ export default function NotFound() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: 24,
-        background: 'linear-gradient(180deg, #fef7ed 0%, #f9fafb 100%)',
       }}
     >
-      <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1f2937', marginBottom: 8 }}>
-          Invalid or expired link
+      <div style={{ textAlign: 'center', maxWidth: 360 }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>💔</div>
+        <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1e1b2e', marginBottom: 10 }}>
+          Link expired or invalid
         </h1>
-        <p style={{ color: '#6b7280' }}>
-          This share link may have expired. Ask for a new link from the app.
+        <p style={{ fontSize: 15, color: '#78716c', lineHeight: 1.6, marginBottom: 24 }}>
+          This share link may have expired. Ask your partner for a new one from the app.
         </p>
+        <a
+          href="/"
+          style={{
+            display: 'inline-block',
+            padding: '12px 28px',
+            background: '#1e1b2e',
+            color: '#fff',
+            borderRadius: 14,
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          Go home
+        </a>
       </div>
     </main>
   );

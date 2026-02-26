@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import styles from './story.module.css';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -37,79 +38,56 @@ export default async function StoryPage({
     .filter((m) => m.status === 'completed' && m.imageUrl)
     .sort((a, b) => a.momentIndex - b.momentIndex);
 
+  if (moments.length === 0) notFound();
+
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        padding: 16,
-        background: 'linear-gradient(180deg, #fef7ed 0%, #f9fafb 100%)',
-        color: '#111',
-      }}
-    >
-      <div style={{ maxWidth: 480, margin: '0 auto' }}>
-        <h1
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: 700,
-            marginBottom: 24,
-            textAlign: 'center',
-            color: '#1f2937',
-          }}
-        >
-          Our Love Story
-        </h1>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {moments.map((m) => (
-            <article
+    <main className={styles.page}>
+      {/* Background blobs */}
+      <div className={styles.blobTop} />
+      <div className={styles.blobBottom} />
+
+      <div className={styles.container}>
+        {/* Header */}
+        <header className={styles.header}>
+          <div className={styles.headerIcon}>❤️</div>
+          <h1 className={styles.title}>Our Love Story</h1>
+          <p className={styles.subtitle}>
+            {moments.length} moment{moments.length !== 1 ? 's' : ''} of love, captured forever
+          </p>
+        </header>
+
+        {/* Moment cards */}
+        <div className={styles.grid}>
+          {moments.map((m, i) => (
+            <a
               key={m.id}
-              style={{
-                background: '#fff',
-                borderRadius: 16,
-                overflow: 'hidden',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                border: '1px solid #f3f4f6',
-              }}
+              href={`/story/${shareToken}/moment/${m.id}`}
+              className={styles.card}
+              style={{ animationDelay: `${i * 0.08}s` }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={m.imageUrl!}
-                alt={`Moment ${m.momentIndex + 1}`}
-                style={{
-                  width: '100%',
-                  height: 320,
-                  objectFit: 'cover',
-                  display: 'block',
-                }}
-              />
-              <div style={{ padding: 16 }}>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    background: '#f0fdf4',
-                    color: '#166534',
-                    padding: '6px 12px',
-                    borderRadius: 20,
-                    fontSize: 12,
-                    fontWeight: 600,
-                    marginBottom: 8,
-                  }}
-                >
+              <div className={styles.cardImageWrap}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={m.imageUrl!}
+                  alt={m.caption}
+                  className={styles.cardImage}
+                />
+                <div className={styles.cardBadge}>
                   Moment {m.momentIndex + 1}
-                </span>
-                <p
-                  style={{
-                    fontSize: 16,
-                    lineHeight: 1.6,
-                    color: '#374151',
-                    margin: 0,
-                  }}
-                >
-                  {m.caption}
-                </p>
+                </div>
               </div>
-            </article>
+              <div className={styles.cardBody}>
+                <p className={styles.cardCaption}>{m.caption}</p>
+              </div>
+            </a>
           ))}
         </div>
+
+        {/* Footer */}
+        <footer className={styles.footer}>
+          <span>Made with ❤️ using </span>
+          <strong>Life With You</strong>
+        </footer>
       </div>
     </main>
   );
@@ -122,6 +100,6 @@ export function generateMetadata({
 }) {
   return {
     title: 'Our Love Story',
-    description: 'View your shared love story',
+    description: 'View our shared love story — moments captured forever',
   };
 }
