@@ -11,6 +11,10 @@ interface Moment {
   status: string;
 }
 
+function ensureHttps(url: string): string {
+  return url.replace(/^http:\/\/(?!localhost|127\.|192\.168\.|10\.)/, 'https://');
+}
+
 async function getStory(shareToken: string): Promise<{ moments: Moment[] } | null> {
   if (!API_BASE) return null;
   try {
@@ -18,7 +22,12 @@ async function getStory(shareToken: string): Promise<{ moments: Moment[] } | nul
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;
-    return res.json();
+    const data = await res.json();
+    data.moments = data.moments.map((m: Moment) => ({
+      ...m,
+      imageUrl: m.imageUrl ? ensureHttps(m.imageUrl) : null,
+    }));
+    return data;
   } catch {
     return null;
   }

@@ -11,6 +11,10 @@ interface MomentData {
   status: string;
 }
 
+function ensureHttps(url: string): string {
+  return url.replace(/^http:\/\/(?!localhost|127\.|192\.168\.|10\.)/, 'https://');
+}
+
 async function getMoment(shareToken: string, momentId: string): Promise<MomentData | null> {
   if (!API_BASE) return null;
   try {
@@ -18,7 +22,9 @@ async function getMoment(shareToken: string, momentId: string): Promise<MomentDa
       next: { revalidate: 60 },
     });
     if (!res.ok) return null;
-    return res.json();
+    const data = await res.json();
+    if (data.imageUrl) data.imageUrl = ensureHttps(data.imageUrl);
+    return data;
   } catch {
     return null;
   }
